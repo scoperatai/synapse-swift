@@ -11,12 +11,12 @@ struct URLSessionTransport: Transport {
     private let session: URLSession
 
     init(timeout: TimeInterval) {
+        // Ephemeral: no cookie store, no URL cache. Nothing here benefits from
+        // either, and analytics has no business sharing credentials with the
+        // host app's own requests.
         let configuration = URLSessionConfiguration.ephemeral
         configuration.timeoutIntervalForRequest = timeout
         configuration.timeoutIntervalForResource = timeout
-        configuration.httpAdditionalHeaders = ["Content-Type": "application/json"]
-        // Analytics must never delay a user-initiated request.
-        configuration.networkServiceType = .background
         session = URLSession(configuration: configuration)
     }
 
