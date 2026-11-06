@@ -76,8 +76,8 @@ final class EventPipeline: Sendable {
 
     func track(
         _ name: String,
-        properties: [String: TrackerValue]? = nil,
-        context: [String: TrackerValue]? = nil
+        properties: [String: SynapseValue]? = nil,
+        context: [String: SynapseValue]? = nil
     ) {
         let timestamp = now()
         let outcome = state.withLock { state -> (shouldFlush: Bool, dropped: Int) in
@@ -106,7 +106,7 @@ final class EventPipeline: Sendable {
     /// Returns whether this was a real login (or an account switch), which the
     /// facade uses to decide whether to re-evaluate flags for the new identity.
     @discardableResult
-    func identify(userID: String, traits: [String: TrackerValue]?) -> Bool {
+    func identify(userID: String, traits: [String: SynapseValue]?) -> Bool {
         let timestamp = now()
         let outcome = state.withLock { state -> (isNewUser: Bool, dropped: Int) in
             // In-memory first, falling back to the persisted id so being
@@ -291,8 +291,8 @@ final class EventPipeline: Sendable {
 
     private func makeEvent(
         name: String,
-        properties: [String: TrackerValue]?,
-        context: [String: TrackerValue]?,
+        properties: [String: SynapseValue]?,
+        context: [String: SynapseValue]?,
         occurredAt: Date,
         sessionID: String?,
         state: State
@@ -332,7 +332,7 @@ final class EventPipeline: Sendable {
 
     private func report(dropped: Int) {
         guard dropped > 0 else { return }
-        Log.tracker.warning("Event queue full — dropped \(dropped, privacy: .public) event(s)")
+        Log.events.warning("Event queue full — dropped \(dropped, privacy: .public) event(s)")
         configuration.onError?(.queueOverflow(dropped: dropped))
     }
 
@@ -424,7 +424,7 @@ final class EventPipeline: Sendable {
             )
             state.nextFlushAllowedAt = timestamp.addingTimeInterval(delay)
         }
-        Log.tracker.error("Failed to upload \(events, privacy: .public) event(s): \(reason, privacy: .public)")
+        Log.events.error("Failed to upload \(events, privacy: .public) event(s): \(reason, privacy: .public)")
         configuration.onError?(.uploadFailed(events: events, underlying: reason))
     }
 

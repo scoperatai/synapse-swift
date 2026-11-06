@@ -2,15 +2,15 @@
 import PackageDescription
 
 let package = Package(
-    name: "scoperat-swift",
-    // Below the CRM app's iOS 18 floor on purpose: this is the SDK other
-    // apps embed, and nothing here needs a recent API.
+    name: "synapse-swift",
+    // Kept low on purpose: this is an SDK other apps embed, and nothing
+    // here needs a recent API.
     platforms: [.iOS(.v17), .macOS(.v14)],
     products: [
-        .library(name: "ScopeRatTracker", targets: ["ScopeRatTracker"])
+        .library(name: "Synapse", targets: ["Synapse"])
     ],
     targets: [
-        .target(name: "ScopeRatTracker"),
-        .testTarget(name: "ScopeRatTrackerTests", dependencies: ["ScopeRatTracker"]),
+        .target(name: "Synapse"),
+        .testTarget(name: "SynapseTests", dependencies: ["Synapse"]),
     ]
 )

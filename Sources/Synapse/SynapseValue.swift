@@ -8,14 +8,14 @@ import Foundation
 /// reading like the dictionaries they replace:
 ///
 /// ```swift
-/// ScopeRat.shared.track("client_viewed", properties: ["id": "abc", "tab": 2])
+/// Synapse.shared.track("client_viewed", properties: ["id": "abc", "tab": 2])
 /// ```
-public enum TrackerValue: Sendable, Hashable {
+public enum SynapseValue: Sendable, Hashable {
     case string(String)
     case number(Double)
     case bool(Bool)
-    case array([TrackerValue])
-    case object([String: TrackerValue])
+    case array([SynapseValue])
+    case object([String: SynapseValue])
     case null
 
     public var stringValue: String? {
@@ -34,7 +34,7 @@ public enum TrackerValue: Sendable, Hashable {
     }
 }
 
-extension TrackerValue: Codable {
+extension SynapseValue: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         if container.decodeNil() {
@@ -54,11 +54,11 @@ extension TrackerValue: Codable {
             self = .string(value)
             return
         }
-        if let value = try? container.decode([TrackerValue].self) {
+        if let value = try? container.decode([SynapseValue].self) {
             self = .array(value)
             return
         }
-        if let value = try? container.decode([String: TrackerValue].self) {
+        if let value = try? container.decode([String: SynapseValue].self) {
             self = .object(value)
             return
         }
@@ -81,32 +81,32 @@ extension TrackerValue: Codable {
     }
 }
 
-extension TrackerValue: ExpressibleByStringLiteral {
+extension SynapseValue: ExpressibleByStringLiteral {
     public init(stringLiteral value: String) { self = .string(value) }
 }
 
-extension TrackerValue: ExpressibleByIntegerLiteral {
+extension SynapseValue: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: Int) { self = .number(Double(value)) }
 }
 
-extension TrackerValue: ExpressibleByFloatLiteral {
+extension SynapseValue: ExpressibleByFloatLiteral {
     public init(floatLiteral value: Double) { self = .number(value) }
 }
 
-extension TrackerValue: ExpressibleByBooleanLiteral {
+extension SynapseValue: ExpressibleByBooleanLiteral {
     public init(booleanLiteral value: Bool) { self = .bool(value) }
 }
 
-extension TrackerValue: ExpressibleByNilLiteral {
+extension SynapseValue: ExpressibleByNilLiteral {
     public init(nilLiteral: ()) { self = .null }
 }
 
-extension TrackerValue: ExpressibleByArrayLiteral {
-    public init(arrayLiteral elements: TrackerValue...) { self = .array(elements) }
+extension SynapseValue: ExpressibleByArrayLiteral {
+    public init(arrayLiteral elements: SynapseValue...) { self = .array(elements) }
 }
 
-extension TrackerValue: ExpressibleByDictionaryLiteral {
-    public init(dictionaryLiteral elements: (String, TrackerValue)...) {
+extension SynapseValue: ExpressibleByDictionaryLiteral {
+    public init(dictionaryLiteral elements: (String, SynapseValue)...) {
         self = .object(Dictionary(elements, uniquingKeysWith: { _, last in last }))
     }
 }

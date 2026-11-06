@@ -2,7 +2,7 @@ import Foundation
 import Testing
 import os
 
-@testable import ScopeRatTracker
+@testable import Synapse
 
 @Suite("Feature flags")
 struct FlagStoreTests {
@@ -190,31 +190,31 @@ struct FlagStoreTests {
 }
 
 @Suite("Facade")
-struct ScopeRatTests {
+struct SynapseFacadeTests {
     @Test("calls before start are inert and flag reads fall back to defaults")
     func uninitialized() async {
-        let tracker = ScopeRat()
+        let synapse = Synapse()
 
-        tracker.track("nothing")
-        tracker.identify("user_1")
-        tracker.reset()
+        synapse.track("nothing")
+        synapse.identify("user_1")
+        synapse.reset()
 
-        #expect(tracker.isStarted == false)
-        #expect(tracker.isEnabled("anything") == false)
-        #expect(tracker.isEnabled("anything", default: true))
-        #expect(tracker.string("copy", default: "fallback") == "fallback")
-        #expect(tracker.number("size", default: 10) == 10)
-        #expect(tracker.flag("anything") == nil)
-        #expect(tracker.allFlags.isEmpty)
-        #expect(tracker.flagsHaveLoaded == false)
-        #expect(tracker.sessionID == nil)
-        #expect(await tracker.flush() == FlushResult(success: true, ingested: 0))
+        #expect(synapse.isStarted == false)
+        #expect(synapse.isEnabled("anything") == false)
+        #expect(synapse.isEnabled("anything", default: true))
+        #expect(synapse.string("copy", default: "fallback") == "fallback")
+        #expect(synapse.number("size", default: 10) == 10)
+        #expect(synapse.flag("anything") == nil)
+        #expect(synapse.allFlags.isEmpty)
+        #expect(synapse.flagsHaveLoaded == false)
+        #expect(synapse.sessionID == nil)
+        #expect(await synapse.flush() == FlushResult(success: true, ingested: 0))
     }
 
-    @Test("a blank write key leaves the tracker disabled")
+    @Test("a blank write key leaves Synapse disabled")
     func blankWriteKey() {
-        let tracker = ScopeRat()
-        tracker.start(writeKey: "   ")
-        #expect(tracker.isStarted == false)
+        let synapse = Synapse()
+        synapse.start(writeKey: "   ")
+        #expect(synapse.isStarted == false)
     }
 }

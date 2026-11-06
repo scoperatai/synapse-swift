@@ -6,7 +6,7 @@ import Foundation
 /// or rollout percentages, only the answer — so this is the whole model.
 public struct EvaluatedFlag: Codable, Hashable, Sendable {
     public let key: String
-    public let value: TrackerValue
+    public let value: SynapseValue
     public let type: ValueType
     public let source: Source
 

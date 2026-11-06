@@ -1,13 +1,13 @@
 import Foundation
 import Testing
 
-@testable import ScopeRatTracker
+@testable import Synapse
 
-@Suite("TrackerValue")
-struct TrackerValueTests {
+@Suite("SynapseValue")
+struct SynapseValueTests {
     @Test("every JSON shape round-trips")
     func roundTrip() throws {
-        let value = TrackerValue.object([
+        let value = SynapseValue.object([
             "string": "hello",
             "int": 3,
             "double": 1.5,
@@ -19,14 +19,14 @@ struct TrackerValueTests {
         ])
 
         let data = try JSONEncoder().encode(value)
-        let decoded = try JSONDecoder().decode(TrackerValue.self, from: data)
+        let decoded = try JSONDecoder().decode(SynapseValue.self, from: data)
 
         #expect(decoded == value)
     }
 
     @Test("booleans don't decode as numbers")
     func boolIsNotNumber() throws {
-        let decoded = try JSONDecoder().decode(TrackerValue.self, from: Data("true".utf8))
+        let decoded = try JSONDecoder().decode(SynapseValue.self, from: Data("true".utf8))
         #expect(decoded == .bool(true))
         #expect(decoded.doubleValue == nil)
         #expect(decoded.boolValue == true)
@@ -34,15 +34,15 @@ struct TrackerValueTests {
 
     @Test("whole numbers encode without a decimal point")
     func integersStayIntegral() throws {
-        let data = try JSONEncoder().encode(TrackerValue.object(["count": 3]))
+        let data = try JSONEncoder().encode(SynapseValue.object(["count": 3]))
         #expect(String(data: data, encoding: .utf8) == #"{"count":3}"#)
     }
 
     @Test("typed accessors return nil for the wrong case")
     func accessors() {
-        #expect(TrackerValue.string("a").stringValue == "a")
-        #expect(TrackerValue.string("a").doubleValue == nil)
-        #expect(TrackerValue.number(2).doubleValue == 2)
-        #expect(TrackerValue.null.boolValue == nil)
+        #expect(SynapseValue.string("a").stringValue == "a")
+        #expect(SynapseValue.string("a").doubleValue == nil)
+        #expect(SynapseValue.number(2).doubleValue == 2)
+        #expect(SynapseValue.null.boolValue == nil)
     }
 }

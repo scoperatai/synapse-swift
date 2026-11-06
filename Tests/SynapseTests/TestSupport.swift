@@ -1,7 +1,7 @@
 import Foundation
 import os
 
-@testable import ScopeRatTracker
+@testable import Synapse
 
 /// Records outgoing requests and replays canned responses.
 final class MockTransport: Transport, @unchecked Sendable {

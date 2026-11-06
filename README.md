@@ -1,7 +1,7 @@
-# ScopeRat Swift SDK
+# Synapse for Swift
 
 Analytics events and feature flags for Apple platforms — the Swift counterpart
-to ScopeRat's TypeScript `@scoperat/tracker`.
+to ScopeRat's TypeScript `@scoperat/synapse`.
 
 Requires iOS 17+ / macOS 14+ and Swift 6.
 
@@ -11,7 +11,7 @@ Swift Package Manager:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/scoperatai/scoperat-swift.git", from: "0.1.0")
+    .package(url: "https://github.com/scoperatai/synapse-swift.git", from: "1.0.0")
 ]
 ```
 
@@ -19,12 +19,12 @@ In Xcode: **File → Add Package Dependencies…** and paste the repository URL.
 
 ## Use
 
-Start the tracker once, as early as the app has its configuration:
+Start Synapse once, as early as the app has its configuration:
 
 ```swift
-import ScopeRatTracker
+import Synapse
 
-ScopeRat.shared.start(
+Synapse.shared.start(
     writeKey: "wk_live_...",
     configuration: Configuration(
         environment: "production",
@@ -39,7 +39,7 @@ reads return the default you pass — so builds without a key need no conditiona
 ### Events
 
 ```swift
-ScopeRat.shared.track("client_viewed", properties: ["client_id": id, "tab": 2])
+Synapse.shared.track("client_viewed", properties: ["client_id": id, "tab": 2])
 ```
 
 `track` returns immediately and is safe from any thread. Events are batched and
@@ -48,13 +48,13 @@ uploaded when 10 accumulate, every 3 seconds, and when the app backgrounds.
 ### Identity
 
 ```swift
-ScopeRat.shared.identify(session.userID, traits: [
+Synapse.shared.identify(session.userID, traits: [
     "email": .string(session.email),
     "name": .string(session.name),
     "orgId": .string(session.organizationID),
 ])
 
-ScopeRat.shared.reset()  // on logout
+Synapse.shared.reset()  // on logout
 ```
 
 `identify` backfills events that are queued but not yet uploaded, so activity
@@ -67,17 +67,17 @@ session and mints a new anonymous id.
 Reads are synchronous and never fail — usable directly in a SwiftUI `body`:
 
 ```swift
-if ScopeRat.shared.isEnabled("new_checkout") { ... }
+if Synapse.shared.isEnabled("new_checkout") { ... }
 
-let copy = ScopeRat.shared.string("banner_copy", default: "Welcome")
-let size = ScopeRat.shared.number("page_size", default: 25)
+let copy = Synapse.shared.string("banner_copy", default: "Welcome")
+let size = Synapse.shared.number("page_size", default: 25)
 ```
 
 Flags are evaluated server-side for the current identity, fetched at launch,
 re-fetched every 60 seconds and on `identify`. To re-render when they change:
 
 ```swift
-subscription = ScopeRat.shared.observeFlags {
+subscription = Synapse.shared.observeFlags {
     Task { @MainActor in revision += 1 }
 }
 ```
@@ -88,7 +88,7 @@ the main actor.
 To hold a screen back rather than render a default and flip a moment later:
 
 ```swift
-await ScopeRat.shared.waitForFlags()
+await Synapse.shared.waitForFlags()
 ```
 
 ## Sessions

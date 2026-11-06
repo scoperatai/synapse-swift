@@ -1,6 +1,6 @@
 import Foundation
 
-/// Tracker options, mirroring `InitOptions` in the TypeScript SDK. Every
+/// Synapse options, mirroring `InitOptions` in the TypeScript SDK. Every
 /// default matches that client so the same flag rollout and the same session
 /// window apply whichever platform a user is on.
 public struct Configuration: Sendable {
@@ -36,7 +36,7 @@ public struct Configuration: Sendable {
     /// Called when a batch is dropped or an upload fails, for host-app
     /// logging. The SDK already logs these; this is for surfacing them
     /// somewhere else.
-    public var onError: (@Sendable (TrackerError) -> Void)?
+    public var onError: (@Sendable (SynapseError) -> Void)?
 
     public init(
         endpoint: URL = Configuration.defaultEndpoint,
@@ -48,7 +48,7 @@ public struct Configuration: Sendable {
         environment: String? = nil,
         release: String? = nil,
         flagPollInterval: TimeInterval = 60,
-        onError: (@Sendable (TrackerError) -> Void)? = nil
+        onError: (@Sendable (SynapseError) -> Void)? = nil
     ) {
         self.endpoint = endpoint
         self.flushAt = flushAt
@@ -71,7 +71,7 @@ public struct Configuration: Sendable {
     static let maxRetryBackoff: TimeInterval = 60
 }
 
-public enum TrackerError: Error, Sendable {
+public enum SynapseError: Error, Sendable {
     /// The API rejected or could not be reached for this many events.
     case uploadFailed(events: Int, underlying: String)
     /// The queue was full and the oldest event was discarded.

@@ -9,8 +9,8 @@ import Foundation
 /// moment the event happened, not the moment it was finally uploaded.
 struct TrackEvent: Codable, Hashable, Sendable {
     var event: String
-    var properties: [String: TrackerValue]?
-    var context: [String: TrackerValue]?
+    var properties: [String: SynapseValue]?
+    var context: [String: SynapseValue]?
     var occurredAt: String?
     var orgID: String?
     var userID: String?

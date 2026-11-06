@@ -63,7 +63,7 @@ struct DiskStore: Sendable {
             return
         }
         let directory = base
-            .appendingPathComponent("ScopeRatTracker", isDirectory: true)
+            .appendingPathComponent("Synapse", isDirectory: true)
             .appendingPathComponent(namespace, isDirectory: true)
         try? FileManager.default.createDirectory(
             at: directory,

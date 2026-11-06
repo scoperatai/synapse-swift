@@ -4,7 +4,7 @@ import Foundation
 import UIKit
 #endif
 
-/// Bridges app lifecycle to the tracker.
+/// Bridges app lifecycle to Synapse.
 ///
 /// Backgrounding is this SDK's equivalent of the web's `pagehide`: the last
 /// moment to get queued events out before the system may terminate the process.

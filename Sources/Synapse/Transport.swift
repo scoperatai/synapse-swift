@@ -48,6 +48,6 @@ extension HTTPURLResponse {
 }
 
 enum Log {
-    static let tracker = Logger(subsystem: "ai.scoperat.tracker", category: "tracker")
-    static let flags = Logger(subsystem: "ai.scoperat.tracker", category: "flags")
+    static let events = Logger(subsystem: "ai.scoperat.synapse", category: "events")
+    static let flags = Logger(subsystem: "ai.scoperat.synapse", category: "flags")
 }

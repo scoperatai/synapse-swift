@@ -2,7 +2,7 @@ import Foundation
 import Testing
 import os
 
-@testable import ScopeRatTracker
+@testable import Synapse
 
 @Suite("Event wire format")
 struct EventWireFormatTests {

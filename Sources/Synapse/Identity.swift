@@ -6,7 +6,7 @@ struct Identity: Sendable, Equatable {
     var anonymousID: String
     var userID: String?
     var orgID: String?
-    var traits: [String: TrackerValue] = [:]
+    var traits: [String: SynapseValue] = [:]
 
     /// The value the flag API targets on: the real user when known, otherwise
     /// the anonymous id, so a rollout percentage stays stable for a given

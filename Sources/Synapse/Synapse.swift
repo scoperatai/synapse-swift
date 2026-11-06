@@ -2,12 +2,12 @@ import CryptoKit
 import Foundation
 import os
 
-/// The ScopeRat tracker: analytics events and feature flags.
+/// ScopeRat Synapse: analytics events and feature flags.
 ///
 /// Start it once, early — typically as the app's model is constructed:
 ///
 /// ```swift
-/// ScopeRat.shared.start(
+/// Synapse.shared.start(
 ///     writeKey: AppConfig.scopeRatWriteKey,
 ///     configuration: Configuration(environment: "production", release: AppConfig.version)
 /// )
@@ -17,12 +17,12 @@ import os
 /// before `start` is a no-op, and flag reads fall back to the default you pass,
 /// so a build without a write key behaves like a build without the SDK.
 ///
-/// This is a port of ScopeRat's TypeScript tracker, matching it on event shape,
-/// batching, retry, and session semantics. Two capabilities are deliberately
-/// absent: error capture (iOS crash reporting is a different problem than
+/// This is a port of `@scoperat/synapse`, matching it on event shape, batching,
+/// retry, and session semantics. Two capabilities are deliberately absent:
+/// error capture (iOS crash reporting is a different problem than
 /// `window.onerror`) and the ticket/announce widgets (DOM-bound UI).
-public final class ScopeRat: Sendable {
-    public static let shared = ScopeRat()
+public final class Synapse: Sendable {
+    public static let shared = Synapse()
 
     private struct Runtime: Sendable {
         let pipeline: EventPipeline
@@ -36,14 +36,14 @@ public final class ScopeRat: Sendable {
 
     // MARK: - Lifecycle
 
-    /// Configure and start the tracker. A blank write key is ignored, which is
+    /// Configure and start Synapse. A blank write key is ignored, which is
     /// how a debug build opts out without conditional call sites.
     ///
     /// Calling this again replaces the previous configuration; any events still
     /// queued from it are flushed first.
     public func start(writeKey: String, configuration: Configuration = Configuration()) {
         guard let writeKey = writeKey.nilIfBlank else {
-            Log.tracker.info("No write key — tracking disabled")
+            Log.events.info("No write key — tracking disabled")
             return
         }
 
@@ -113,7 +113,7 @@ public final class ScopeRat: Sendable {
     // MARK: - Events
 
     /// Queue an event. Returns immediately; delivery is batched.
-    public func track(_ event: String, properties: [String: TrackerValue]? = nil) {
+    public func track(_ event: String, properties: [String: SynapseValue]? = nil) {
         pipeline?.track(event, properties: properties)
     }
 
@@ -122,7 +122,7 @@ public final class ScopeRat: Sendable {
     /// `traits` is free-form and lands under the event's `context.traits`;
     /// `orgId` is special-cased into the event's `org_id` column, and `email`
     /// and `name` are the conventional keys the dashboard displays.
-    public func identify(_ userID: String, traits: [String: TrackerValue]? = nil) {
+    public func identify(_ userID: String, traits: [String: SynapseValue]? = nil) {
         guard let runtime = runtime.withLock({ $0 }) else { return }
         runtime.pipeline.identify(userID: userID, traits: traits)
         // Flags target on user id, so the cached evaluation is stale the moment
@@ -171,7 +171,7 @@ public final class ScopeRat: Sendable {
     }
 
     /// A JSON-valued flag, for structured configuration.
-    public func json(_ key: String) -> TrackerValue? {
+    public func json(_ key: String) -> SynapseValue? {
         flags?.flag(key)?.value
     }
 

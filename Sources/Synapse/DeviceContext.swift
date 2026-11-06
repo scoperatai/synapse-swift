@@ -15,10 +15,10 @@ import Foundation
 /// distinction lives here instead.
 enum DeviceContext {
     /// Computed once — none of it changes over a process lifetime.
-    static let current: [String: TrackerValue] = build()
+    static let current: [String: SynapseValue] = build()
 
-    private static func build() -> [String: TrackerValue] {
-        var context: [String: TrackerValue] = [
+    private static func build() -> [String: SynapseValue] {
+        var context: [String: SynapseValue] = [
             "platform": .string(platformName),
             "locale": .string(Locale.current.identifier),
             "timezone": .string(TimeZone.current.identifier),
@@ -32,7 +32,7 @@ enum DeviceContext {
             ]),
         ]
 
-        var app: [String: TrackerValue] = [:]
+        var app: [String: SynapseValue] = [:]
         let info = Bundle.main.infoDictionary
         if let name = (info?["CFBundleDisplayName"] ?? info?["CFBundleName"]) as? String {
             app["name"] = .string(name)
